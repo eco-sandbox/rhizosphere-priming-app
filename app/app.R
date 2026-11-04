@@ -10,6 +10,21 @@ library(gridExtra)
 library(scales)
 
 # ============================================================
+# HELPERS: reference list for the About tab
+# ============================================================
+ref_item <- function(authors, source, doi, note = NULL) {
+  tags$li(HTML(paste0(
+    htmltools::htmlEscape(authors), " <em>", htmltools::htmlEscape(source), "</em> ",
+    '<a href="https://doi.org/', doi, '" target="_blank">doi:', htmltools::htmlEscape(doi), '</a>',
+    if (!is.null(note)) paste0(". ", htmltools::htmlEscape(note)) else "."
+  )))
+}
+
+ref_group <- function(title, ...) {
+  tagList(h5(strong(title)), tags$ul(...))
+}
+
+# ============================================================
 # MODEL FUNCTIONS 
 # ============================================================
 microbial_cn <- function(cn_som = 22, cn_re) {
@@ -336,7 +351,40 @@ ui <- navbarPage(
         tags$li(strong("Net RPE:"), "Net rhizosphere priming effect on soil C (positive = net loss of soil C, negative = net gain/stabilization).")
       ),
       hr(),
-      p(em("Model originally developed for exploring context-dependent rhizosphere priming. This app is an interactive wrapper around that codebase."))
+      h4("Key references"),
+      ref_group("Model basis",
+        ref_item("Michel (2026)", "Biol Fertil Soils 62: 935–955.", "10.1007/s00374-026-02021-8"),
+        ref_item("Chertov et al. (2022)", "Plants 11: 2605.", "10.3390/plants11192605")
+      ),
+      ref_group("Priming concept",
+        ref_item("Kuzyakov, Friedel & Stahr (2000)", "Soil Biol Biochem 32: 1485–1498.", "10.1016/s0038-0717(00)00084-5"),
+        ref_item("Cheng et al. (2014)", "New Phytol 201: 31–44.", "10.1111/nph.12440")
+      ),
+      ref_group("N mining, the Km term",
+        ref_item("Craine, Morrow & Fierer (2007)", "Ecology 88: 2105–2113.", "10.1890/06-1847.1"),
+        ref_item("Chen et al. (2014)", "Glob Change Biol 20: 2356–2367.", "10.1111/gcb.12475"),
+        ref_item("Dijkstra et al. (2013)", "Front Microbiol 4.", "10.3389/fmicb.2013.00216")
+      ),
+      ref_group("Negative priming",
+        ref_item("Blagodatskaya & Kuzyakov (2008)", "Biol Fertil Soils 45: 115–131.", "10.1007/s00374-008-0334-y"),
+        ref_item("Michel et al. (2023)", "Biogeochemistry 162: 141–161.", "10.1007/s10533-022-00996-8")
+      ),
+      ref_group("Microbial CUE and C:N",
+        ref_item("Manzoni et al. (2012)", "New Phytol 196: 79–91.", "10.1111/j.1469-8137.2012.04225.x"),
+        ref_item("Mooshammer et al. (2014)", "Front Microbiol 5.", "10.3389/fmicb.2014.00022")
+      ),
+      ref_group("Plant–microbe N competition",
+        ref_item("Kuzyakov & Xu (2013)", "New Phytol 198: 656–669.", "10.1111/nph.12235"),
+        ref_item("Hodge, Robinson & Fitter (2000)", "Trends Plant Sci 5: 304–308.", "10.1016/S1360-1385(00)01656-3")
+      ),
+      ref_group("Grazers and the microbial loop",
+        ref_item("Clarholm (1985)", "Soil Biol Biochem 17: 181–187.", "10.1016/0038-0717(85)90113-0"),
+        ref_item("Bonkowski (2004)", "New Phytol 162: 617–631.", "10.1111/j.1469-8137.2004.01066.x")
+      ),
+      ref_group("Earlier priming models",
+        ref_item("Blagodatsky et al. (2010)", "Soil Biol Biochem 42: 1275–1283.", "10.1016/j.soilbio.2010.04.005"),
+        ref_item("Wutzler & Reichstein (2013)", "Biogeosciences 10: 2089–2103.", "10.5194/bg-10-2089-2013")
+      )
     )
   )
 )
@@ -799,3 +847,4 @@ server <- function(input, output, session) {
 # RUN THE APP
 # ============================================================
 shinyApp(ui = ui, server = server)
+
